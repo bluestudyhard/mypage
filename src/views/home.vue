@@ -3,9 +3,10 @@ import { ref, reactive, watch, computed } from "vue";
 import todolist from "../components/MyToDoList.vue";
 const count = ref(1);
 const images = reactive([]);
-
+import backgroundImage from "@/assets/images/page8.webp";
 const backgroundStyle = computed(() => ({
-  backgroundImage: `url("/src/assets/images/page8.webp")`,
+  // backgroundImage: `url("/src/assets/images/page8.webp")`,
+  backgroundImage: `url(${backgroundImage})`,
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
   backgroundSize: "cover",

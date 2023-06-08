@@ -10,6 +10,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@vercel/node": "^2.15.1",
     "axios": "^1.4.0",
     "concurrently": "^8.1.0",
     "cors": "^2.8.5",

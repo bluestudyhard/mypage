@@ -8,7 +8,7 @@
 
     <TransitionGroup name="toDoList" class="myList" tag="ul">
       <li v-for="(list, index) in todolists" :key="index" @click="isdone(list)">
-        <input type="checkbox" v-model="list.done" value="list.done"  />
+        <input type="checkbox" v-model="list.done" value="list.done" />
         <span :class="{ done: list.done }">{{ index + 1 }}.{{ list.text }}</span
         ><button @click="removeList(index, list.id)">x</button>
       </li>

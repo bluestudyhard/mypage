@@ -1,17 +1,32 @@
 <template>
+  {{ current }}
   <div class="myTodoList">
+    <div class="avator"></div>
+    <h2 style="text-align: center; color: azure">Todo List</h2>
     <div class="listHeader">
-      <h3>{{ current }}</h3>
       <input type="text" v-model="inputValue" />
-      <button @click="addList">添加</button>
+      <button @click="addList" class="addlist">+</button>
     </div>
 
     <TransitionGroup name="toDoList" class="myList" tag="ul">
-      <li v-for="(list, index) in todolists" :key="index" @click="isdone(list)">
-        <input type="checkbox" v-model="list.done" value="list.done" />
-        <span :class="{ done: list.done }">{{ index + 1 }}.{{ list.text }}</span
-        ><button @click="removeList(index, list.id)">x</button>
-      </li>
+      <div class="listItem" v-for="(list, index) in todolists" :key="index">
+        <li>
+          <span class="title"
+            ><input
+              type="checkbox"
+              v-model="list.done"
+              @click="isdone(list)"
+              :class="{ chekboxDone: list.done }"
+            />
+            title
+          </span>
+          <span class="content" :class="{ done: list.done }"
+            >{{ index + 1 }}.{{ list.text }}</span
+          >
+        </li>
+
+        <div @click="removeList(index, list.id)">x</div>
+      </div>
     </TransitionGroup>
     <button @click="compeleted = !compeleted">
       {{ compeleted ? "showall" : "HideCompleted" }}
@@ -106,17 +121,24 @@ onMounted(() => {
 
 <style scope>
 .myTodoList {
-  width: 400px;
+  width: 240px;
   height: 400px;
-  background: #f9f9f977;
+  background: #ffffff00;
   border-radius: 15px;
   overflow: scroll;
   overflow-x: hidden;
   scrollbar-width: none;
+  box-shadow: inset 0px 0px 3px 0px rgba(155, 154, 154, 0.34),
+    0px 2px 2px 0px rgb(255 255 255 / 22%);
+}
+.myTodoList:hover {
+  cursor: pointer;
+  backdrop-filter: blur(5px);
 }
 /**自定义滚动条 */
 ::-webkit-scrollbar {
-  width: 6px; /* 宽度 */
+  width: 0px; /* 宽度 */
+  height: auto;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #64636388; /* 滚动条颜色 */
@@ -129,17 +151,39 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
+
+.listItem {
+  display: flex;
+  align-items: center;
+}
+
 .myList li {
   margin: 5px;
   list-style: none;
   border: 1px solid #e4e4e42f;
   border-radius: 15px;
-  background: rgba(255, 255, 255, 0.584);
-  height: 50px;
-  width: 300px;
+  background: #fe2e43a8;
+  height: 60px;
+  width: 200px;
+  display: grid;
+  /**定义表格宽度 */
+  grid-template-rows: 1fr 1fr;
+  overflow: auto;
+  color: rgb(255, 255, 255);
+  font-size: 10px;
+  padding: 3px 0px 6px 10px;
+}
+.myList li:hover {
+  backdrop-filter: blur(15px);
+}
+
+.myList .title {
+  font-size: 15px;
+  font-weight: bolder;
   display: flex;
-  align-items: center;
-  justify-content: center;
+}
+.content {
+  font-size: 5px;
 }
 .done {
   text-decoration: line-through;
@@ -154,5 +198,64 @@ onMounted(() => {
 .toDoList-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+
+.addlist {
+  width: 25px;
+  height: 25px;
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.767);
+  background: #f8384bce;
+  font-size: 20px;
+  transition: all 0.5s ease;
+  text-align: center;
+  left: 80%;
+  position: relative;
+}
+.addlist:hover {
+  background: #f8384b;
+  cursor: pointer;
+}
+
+.listHeader {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.listHeader input {
+  width: 10px;
+  min-height: 10px;
+  border-radius: 6px;
+  border: none;
+  box-decoration-break: none;
+  font-size: 10px;
+  transition: all 0.5s ease;
+  left: 80%;
+  position: absolute;
+}
+.listHeader input:focus {
+  outline: none;
+  width: 150px;
+
+  border: 0;
+  box-shadow: 0px 0px 3px 0px rgba(227, 227, 227, 0.5);
+}
+.listItem input[type="checkbox"] {
+  opacity: 0.6;
+
+  height: 0;
+}
+.listItem input[type="checkbox"]::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #1fea4be5;
+  border: 1px solid #999;
+  border-radius: 50%;
+  position: relative;
+  top: 5px;
 }
 </style>

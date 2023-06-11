@@ -1,12 +1,23 @@
 <script setup>
 import { ref, reactive, watch, computed } from "vue";
-import home from "./views/home.vue";
 </script>
 
 <template>
-  <home />
+  <nav>
+    <router-link to="/">Home</router-link>
+    <router-link to="/canvas">画板</router-link>
+  </nav>
+  <router-view />
 </template>
 
 <style scoped>
-
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+}
 </style>

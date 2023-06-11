@@ -17,7 +17,7 @@
       <button @click="addList" @mouseover="showAdd" class="addlist">+</button>
     </div>
 
-    <draggable :list="lists" animation="300" tag="transition-group">
+    <draggable :list="todolists" animation="300" tag="transition-group">
       <template #item="{ element, index }">
         <div class="myList">
           <div class="listItem">
@@ -181,12 +181,19 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(2px);
 }
 .list-title {
   font-size: 22px;
-  background: linear-gradient(to right, red, blue);
+  background: linear-gradient(
+    to right,
+    #ffffff,
+    #fff0bf
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: 550;
 }
 
 .myTodoList {

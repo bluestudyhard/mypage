@@ -1,5 +1,4 @@
 <template>
-  {{ current }}
   <div class="myTodoList">
     <div class="avator">
       <p class="list-title">Todo List</p>
@@ -35,7 +34,7 @@
                 >{{ index + 1 }}.{{ element.text }}</span
               >
             </li>
-            <!-- <div @click="removeList(index, element.id)">x</div> -->
+            <div @click="removeList(index, element.id)">x</div>
           </div>
         </div>
       </template>
@@ -87,11 +86,6 @@ const lists = ref([]);
 const id = ref(1);
 const showinput = ref(false);
 let compeleted = ref(false);
-
-const testDrag = reactive([
-  { id: 1, name: "test1" },
-  { id: 2, name: "test2" },
-]);
 
 // 使用axios 访问服务器
 const showLists = async () => {
@@ -155,13 +149,6 @@ const isdone = async (list) => {
   console.log(response.data);
 };
 
-/* 获取当前时间 年月日几点*/
-const current = ref(new Date());
-current.value = new Date().toLocaleString();
-// 设置定时器的方法
-setInterval(() => {
-  current.value = new Date().toLocaleString();
-}, 1000);
 
 /**使用axios 访问服务器 */
 const getData = async () => {
@@ -190,7 +177,7 @@ onMounted(() => {
     #ffffff,
     #fff0bf
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 550;

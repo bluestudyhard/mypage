@@ -6,11 +6,11 @@ import { createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    component: import("../views/Home.vue"),
+    component: import("../views/home.vue"),
   },
   {
     path: "/canvas",
-    component: import("../views/Canvas.vue"),
+    component: import("../views/canvas.vue"),
   },
 ];
 

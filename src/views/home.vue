@@ -1,10 +1,16 @@
 <script setup>
-import { ref, reactive, watch, computed } from "vue";
+import { ref, reactive, watch, computed, onMounted, watchEffect } from "vue";
 import myclock from "../components/myclock.vue";
 import todolist from "../components/MyToDoList.vue";
+import next from "../components/PageNext.vue";
 const count = ref(1);
 const images = reactive([]);
+
 import backgroundImage from "@/assets/images/page8.webp";
+
+const scrolled = ref(0);
+
+// back
 const backgroundStyle = computed(() => ({
   // backgroundImage: `url("/src/assets/images/page8.webp")`,
   backgroundImage: `url(${backgroundImage})`,
@@ -13,40 +19,165 @@ const backgroundStyle = computed(() => ({
   backgroundSize: "cover",
 }));
 
+// scroll event
+
+const handleScroll = (e) => {
+  let scrollTop = document.documentElement.scrollTop; // 滚动条滚动的距离
+  let scrollHeight = document.documentElement.scrollHeight; // 滚动页面的总高度
+  let clientHeight = document.documentElement.clientHeight; // 可视区域的高度
+
+  scrolled.value = scrollTop / (scrollHeight - clientHeight); // [0,1)
+
+  // console.log(scrolled.value);
+};
+
+const changeBackGround = computed(() => ({
+  // opacity:
+  //   scrolled.value <= 0.2
+  //     ? (0.1 - scrolled.value) / 0.1
+  //     : scrolled.value <= 0.4 && scrolled.value > 0.2
+  //     ? (0.31 - scrolled.value) / 0.1
+  //     : scrolled.value <= 0.6 && scrolled.value > 0.4
+  //     ? (0.49 - scrolled.value) / 0.1
+  //     : 1,
+  transition: "all 0.8s ease-in-out",
+}));
+
+const scrollText = computed(() => ({
+  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
+  marginTop:
+    scrolled.value <= 0.2 && scrolled.value > 0
+      ? scrolled.value * -1.2 * 500 + "px"
+      : scrolled.value * 1.2 * 500 + "px",
+  transition: "all 0.8s ",
+}));
+
+const scrollTextSecond = computed(() => ({
+  opacity:
+    scrolled.value <= 0.4 && scrolled.value > 0.2
+      ? Math.abs(0.1 - scrolled.value) / 0.1
+      : 0,
+  marginTop:
+    scrolled.value <= 0.4 && scrolled.value > 0.2
+      ? scrolled.value * -0.5 * 500 + "px"
+      : scrolled.value * 0.5 * 500 + "px",
+  transition: "all 0.8s ease-in-out",
+}));
+
+const scrollTextThird = computed(() => ({
+  opacity:
+    scrolled.value <= 0.6 && scrolled.value > 0.4
+      ? Math.abs(0.1 - scrolled.value) / 0.1
+      : 0,
+  marginTop:
+    scrolled.value <= 0.6 && scrolled.value > 0.4
+      ? scrolled.value * -0.25 * 400 + "px"
+      : scrolled.value * 0.25 * 400 + "px",
+  transition: "all 0.8s ease-in-out",
+}));
+
+const scrollNotice = computed(() => ({
+  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
+  transition: "all 0.8s ease-in-out",
+}));
+
+// watchEffect(() => {
+//   console.log("opacity: " + changeBackGround.value.opacity);
+// });
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
 const addCount = () => {
   count.value = (count.value % 24) + 1;
 };
 </script>
 
 <template>
-  <div class="home" :style="backgroundStyle">
-    <myclock class="myclock" />
-    <div class="page-search">
-      <form method="get" action="https://www.bing.com/search" target="_blank">
-        <input
-          type="text"
-          class="serachbody"
-          placeholder="请输入内容"
-          name="q"
-          autocomplete="off"
-        />
-        <input type="submit" value="搜索" class="searchbutton" />
-      </form>
+  <div class="home">
+    <div class="mask">
+      <img
+        class="bg"
+        :style="changeBackGround"
+        src="/src/assets/images/page8.webp"
+        draggable="false"
+      />
+
+      <h1 class="page-text" :style="scrollText">welcome to blue's new page</h1>
+      <h1 class="page-text" :style="scrollTextSecond">
+        Here i will show something about me...
+      </h1>
+      <h1 class="page-text" :style="scrollTextThird">ready? go!</h1>
+      <myclock class="myclock" />
+      <div class="page-search">
+        <form method="get" action="https://www.bing.com/search" target="_blank">
+          <input
+            type="text"
+            class="serachbody"
+            placeholder="请输入内容"
+            name="q"
+            autocomplete="off"
+          />
+          <input type="submit" value="搜索" class="searchbutton" />
+        </form>
+      </div>
+      <next class="notice" :style="scrollNotice" />
     </div>
-    <button @click="addCount">{{ count }}</button>
-    <div class="myToDoList">
-      <todolist />
-    </div>
+  </div>
+
+  <div class="myToDoList">
+    <todolist />
   </div>
 </template>
 <style scoped>
 .home {
+  width: 100%;
+  height: 3000px;
+  user-select: none;
+}
+
+.bg {
+  width: 100%;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  /* 保持宽高比 */
+  object-fit: cover;
+}
+
+.mask {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100vh;
+  overflow: hidden;
+  top: 0;
+  position: sticky;
+}
+
+.page-text {
+  position: absolute;
+  top: 50%;
+  color: rgb(36, 33, 33);
+  font-family: Helvetica;
+  letter-spacing: 1px;
+  font-size: 36px;
+  opacity: 1;
+  margin-top: 0px;
+}
+.page-text-second {
+  position: absolute;
+  top: 50%;
+  color: rgb(36, 33, 33);
+  font-family: Helvetica;
+  letter-spacing: 1px;
+  font-size: 36px;
+  opacity: 1;
+  margin-top: 0px;
 }
 .myclock {
   position: fixed;
@@ -58,6 +189,12 @@ const addCount = () => {
   position: fixed;
   right: 1%;
   top: 3%;
+}
+
+.notice {
+  position: fixed;
+  bottom: 15%;
+  left: 48;
 }
 .page-search {
   display: flex;
@@ -80,8 +217,17 @@ const addCount = () => {
     width: 10rem;
   }
   .myToDoList {
-    position: relative;
-    top: 5rem;
+    position: fixed;
+    display: none;
+  }
+  .page-text {
+    font-size: 24px;
+  }
+  .myclock {
+    display: none;
+  }
+  .notice {
+    left: 30%;
   }
 }
 .serachbody {

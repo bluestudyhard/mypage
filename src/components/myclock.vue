@@ -27,6 +27,7 @@ const months = [
 ];
 const current = ref(new Date());
 const current1 = ref(new Date()); // 时分
+const currentTime = ref("");
 const year = current.value.getFullYear();
 const month = months[current.value.getMonth()];
 const day = weekly[current.value.getDay()];
@@ -53,7 +54,8 @@ onMounted(() => {
   setAM();
   setInterval(() => {
     current1.value = new Date().toLocaleString();
-    current1.value = current1.value.substring(10, 15);
+
+    currentTime.value = current1.value.substring(10, 15);
   }, 1000);
   setInterval(() => {
     hours.value = current.value.getHours();
@@ -84,7 +86,7 @@ onMounted(() => {
           <span class="clock_day">{{ monDay }},</span>
           <span class="clock_year">{{ year }}</span>
         </div>
-        <span class="clock_hour">{{ current1 }}</span>
+        <span class="clock_hour">{{ currentTime }}</span>
         <span class="clock_am">{{ isAM ? "AM" : "PM" }}</span>
       </div>
     </div>
@@ -95,6 +97,7 @@ onMounted(() => {
 .container {
   display: grid;
   width: 15rem;
+  user-select: none;
 }
 .clock {
   width: 100%;
@@ -105,7 +108,6 @@ onMounted(() => {
   font-family: "Montserrat", sans-serif;
   font-weight: 550;
   column-gap: 1em;
-
   background: #d9dacc;
   border-radius: 40px;
   box-shadow: 6px 6px 0px 0px rgb(179, 179, 179),

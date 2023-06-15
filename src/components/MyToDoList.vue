@@ -85,7 +85,7 @@ const inputValue = ref("");
 const lists = ref([]);
 const id = ref(1);
 const showinput = ref(false);
-let compeleted = ref(false);
+let compeleted = ref(true);
 
 // 使用axios 访问服务器
 const showLists = async () => {
@@ -148,7 +148,6 @@ const isdone = async (list) => {
   });
   console.log(response.data);
 };
-
 
 /**使用axios 访问服务器 */
 const getData = async () => {

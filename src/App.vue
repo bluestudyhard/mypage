@@ -19,6 +19,7 @@ nav {
   background-color: transparent;
   position: fixed;
   top: 0;
+
 }
 nav a {
   margin: 0 10px 0px 0px;

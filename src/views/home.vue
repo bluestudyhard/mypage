@@ -3,21 +3,13 @@ import { ref, reactive, watch, computed, onMounted, watchEffect } from "vue";
 import myclock from "../components/myclock.vue";
 import todolist from "../components/MyToDoList.vue";
 import next from "../components/PageNext.vue";
+import star from "../components/star.vue";
 const count = ref(1);
 const images = reactive([]);
 
-import backgroundImage from "@/assets/images/page8.webp";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const scrolled = ref(0);
-
-// back
-const backgroundStyle = computed(() => ({
-  // backgroundImage: `url("/src/assets/images/page8.webp")`,
-  backgroundImage: `url(${backgroundImage})`,
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  backgroundSize: "cover",
-}));
 
 // scroll event
 
@@ -27,8 +19,22 @@ const handleScroll = (e) => {
   let clientHeight = document.documentElement.clientHeight; // 可视区域的高度
 
   scrolled.value = scrollTop / (scrollHeight - clientHeight); // [0,1)
-
+  // if (scrolled.value > 0.8) {
+  //   setTimeout(() => {
+  //     router.push("/canvas");
+  //   }, 2000);
+  // }
   // console.log(scrolled.value);
+};
+
+const getImageUrl = (scroll) => {
+  if (scroll <= 0.2) {
+    return "url('/public/page8.webp')";
+  } else if (scroll <= 0.4 && scroll > 0.2) {
+    return "url('/public/page2.webp')";
+  } else {
+    return "url('/public/page12.webp')";
+  }
 };
 
 const changeBackGround = computed(() => ({
@@ -40,6 +46,18 @@ const changeBackGround = computed(() => ({
   //     : scrolled.value <= 0.6 && scrolled.value > 0.4
   //     ? (0.49 - scrolled.value) / 0.1
   //     : 1,
+
+  backgroundImage: `${getImageUrl(scrolled.value)}`,
+  transition: "all 1.1s ",
+}));
+
+const scrollStar = computed(() => ({
+  opacity: scrolled.value > 0.6 ? (1 - scrolled.value) / 0.1 : 0,
+  transition: "all 0.8s ease-in-out",
+}));
+
+const scrollSerach = computed(() => ({
+  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
   transition: "all 0.8s ease-in-out",
 }));
 
@@ -88,22 +106,13 @@ const scrollNotice = computed(() => ({
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
 });
-
-const addCount = () => {
-  count.value = (count.value % 24) + 1;
-};
 </script>
 
 <template>
   <div class="home">
     <div class="mask">
-      <img
-        class="bg"
-        :style="changeBackGround"
-        src="/src/assets/images/page8.webp"
-        draggable="false"
-      />
-
+      <div class="bg" :style="changeBackGround" draggable="false"></div>
+      <star class="star" :style="scrollStar" />
       <h1 class="page-text" :style="scrollText">welcome to blue's new page</h1>
       <h1 class="page-text" :style="scrollTextSecond">
         Here i will show something about me...
@@ -111,7 +120,12 @@ const addCount = () => {
       <h1 class="page-text" :style="scrollTextThird">ready? go!</h1>
       <myclock class="myclock" />
       <div class="page-search">
-        <form method="get" action="https://www.bing.com/search" target="_blank">
+        <form
+          method="get"
+          action="https://www.bing.com/search"
+          target="_blank"
+          :style="scrollSerach"
+        >
           <input
             type="text"
             class="serachbody"
@@ -145,8 +159,19 @@ const addCount = () => {
   z-index: 0;
   /* 保持宽高比 */
   object-fit: cover;
+  background-image: url("/public/page8.webp");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
-
+.star {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  opacity: 0;
+}
 .mask {
   display: flex;
   flex-direction: column;
@@ -195,6 +220,7 @@ const addCount = () => {
   position: fixed;
   bottom: 15%;
   left: 48;
+  z-index: 20;
 }
 .page-search {
   display: flex;
@@ -208,6 +234,7 @@ const addCount = () => {
   margin-top: 5%;
   position: fixed;
   top: 10%;
+  z-index: 20;
 }
 @media (max-width: 768px) {
   .page-search {

@@ -30,11 +30,11 @@ const handleScroll = (e) => {
 
 const getImageUrl = (scroll) => {
   if (scroll <= 0.2) {
-    return `url('src/assets/images/page8.webp')`;
+    return `url('/src/assets/images/page8.webp')`;
   } else if (scroll <= 0.4 && scroll > 0.2) {
-    return "url('src/assets/images/page2.webp')";
+    return "url('/src/assets/images/page2.webp')";
   } else {
-    return "url('src/assets/images/page12.webp')";
+    return "url('/src/assets/images/page12.webp')";
   }
 };
 

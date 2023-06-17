@@ -7,15 +7,23 @@ import star from "../components/star.vue";
 import backimg1 from "@/assets/images/page8.webp";
 import backimg2 from "@/assets/images/page2.webp";
 import backimg3 from "@/assets/images/page12.webp";
-const count = ref(1);
-const images = reactive([]);
-
+const isHide = ref(false);
+const isfoucus = ref(false);
 import { useRouter } from "vue-router";
 const router = useRouter();
 const scrolled = ref(0);
 
-// scroll event
+const onSearch = computed(() => ({
+  transform: "scale(1.1)",
+  filter: "blur(3px)",
+  transition: "all 1.1s ease-in-out",
+}));
 
+/**
+ * scrolled表示滚动条的滚动区间，[0,0.2] (0.2,0.4] (0.4,0.6] (0.6,1] 分别有不同的效果
+ *
+ */
+// scroll event
 const handleScroll = (e) => {
   let scrollTop = document.documentElement.scrollTop; // 滚动条滚动的距离
   let scrollHeight = document.documentElement.scrollHeight; // 滚动页面的总高度
@@ -102,9 +110,10 @@ const scrollNotice = computed(() => ({
   transition: "all 0.8s ease-in-out",
 }));
 
-// watchEffect(() => {
-//   console.log("opacity: " + changeBackGround.value.opacity);
-// });
+watchEffect(() => {
+  isHide.value = scrolled.value > 0.25 ? false : true;
+  console.log(isfoucus.value);
+});
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
@@ -114,14 +123,18 @@ onMounted(() => {
 <template>
   <div class="home">
     <div class="mask">
-      <div class="bg" :style="changeBackGround" draggable="false"></div>
+      <div
+        :style="isfoucus ? onSearch : changeBackGround"
+        draggable="false"
+        class="bg"
+      ></div>
       <star class="star" :style="scrollStar" />
       <h1 class="page-text" :style="scrollText">welcome to blue's new page</h1>
       <h1 class="page-text" :style="scrollTextSecond">
         Here i will show something about me...
       </h1>
       <h1 class="page-text" :style="scrollTextThird">ready? go!</h1>
-      <myclock class="myclock" />
+      <myclock class="myclock" v-if="isHide" />
       <div class="page-search">
         <form
           method="get"
@@ -135,16 +148,17 @@ onMounted(() => {
             placeholder="请输入内容"
             name="q"
             autocomplete="off"
+            @focus="isfoucus = true"
+            @blur="isfoucus = false"
           />
           <input type="submit" value="搜索" class="searchbutton" />
         </form>
       </div>
       <next class="notice" :style="scrollNotice" />
     </div>
-  </div>
-
-  <div class="myToDoList">
-    <todolist />
+    <div class="myToDoList" v-if="isHide">
+      <todolist />
+    </div>
   </div>
 </template>
 <style scoped>
@@ -167,6 +181,7 @@ onMounted(() => {
   background-position: center;
   background-size: cover;
 }
+
 .star {
   width: 100%;
   height: 100vh;

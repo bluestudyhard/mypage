@@ -2,6 +2,17 @@
   <div class="container">
     <!-- 其他组件内容 -->
 
+    <!-- <div class="nav">
+      <div class="nav_left">
+        <div class="nav_left_logo">
+          <img src="../assets/logo.png" alt="" />
+        </div>
+        <div class="nav_left_title">
+          <h1>My Blog</h1>
+        </div>
+      </div>
+    </div> -->
+
     <div id="stars"></div>
     <div id="stars2"></div>
     <div id="stars3"></div>
@@ -10,6 +21,9 @@
 </template>
 
 <style lang="sass" scoped>
+.nav
+  display: flex
+  width: 100%
 .container
   width: 100%
   height: 100vh

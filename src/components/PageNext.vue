@@ -1,6 +1,6 @@
 <template>
   <div class="btn-conteiner">
-    <a class="btn-content" href="#">
+    <div class="btn-content">
       <span class="btn-title">Scroll It</span>
       <span class="icon-arrow">
         <svg
@@ -36,7 +36,7 @@
           </g>
         </svg>
       </span>
-    </a>
+    </div>
   </div>
 </template>
 
@@ -67,10 +67,10 @@
 }
 /* @keyframes btn-content {
   0% {
-    box-shadow: 0px 0px 1px 1px black;
+    box-shadow: 0px 0px 2px 2 px black;
   }
   100% {
-    box-shadow: 0px 0px 1px 1px black;
+    box-shadow: 0px 0px 3px 3px black;
   }
 } */
 

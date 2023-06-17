@@ -197,6 +197,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 .listHeader {
   display: flex;

@@ -32,11 +32,11 @@ const handleScroll = (e) => {
 
 const getImageUrl = (scroll) => {
   if (scroll <= 0.2) {
-    return `url(${backimg1}})`;
+    return `url(${backimg1})`;
   } else if (scroll <= 0.4 && scroll > 0.2) {
-    return `url(${backimg2}})`;
+    return `url(${backimg2})`;
   } else {
-    return `url(${backimg3}})`;
+    return `url(${backimg3})`;
   }
 };
 

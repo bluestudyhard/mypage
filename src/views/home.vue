@@ -4,7 +4,9 @@ import myclock from "../components/myclock.vue";
 import todolist from "../components/MyToDoList.vue";
 import next from "../components/PageNext.vue";
 import star from "../components/star.vue";
-import backimg from "@/assets/images/page8.webp";
+import backimg1 from "@/assets/images/page8.webp";
+import backimg2 from "@/assets/images/page2.webp";
+import backimg3 from "@/assets/images/page12.webp";
 const count = ref(1);
 const images = reactive([]);
 
@@ -30,11 +32,11 @@ const handleScroll = (e) => {
 
 const getImageUrl = (scroll) => {
   if (scroll <= 0.2) {
-    return `url('/src/assets/images/page8.webp')`;
+    return `url(${backimg1}})`;
   } else if (scroll <= 0.4 && scroll > 0.2) {
-    return "url('/src/assets/images/page2.webp')";
+    return `url(${backimg2}})`;
   } else {
-    return "url('/src/assets/images/page12.webp')";
+    return `url(${backimg3}})`;
   }
 };
 

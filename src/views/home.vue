@@ -108,8 +108,17 @@ watchEffect(() => {
   isHide.value = scrolled.value > 0.25 ? false : true;
 });
 
+/**预先加载背景图片 */
+const preloadImages = () => {
+  const images = [backimg1, backimg2, backimg3];
+  for (let i = 0; i < images.length; i++) {
+    new Image().src = images[i];
+  }
+};
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  preloadImages();
 });
 </script>
 

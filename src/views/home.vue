@@ -106,7 +106,6 @@ const scrollNotice = computed(() => ({
 
 watchEffect(() => {
   isHide.value = scrolled.value > 0.25 ? false : true;
-  console.log(isfoucus.value);
 });
 
 onMounted(() => {
@@ -142,7 +141,7 @@ onMounted(() => {
           <input type="submit" value="搜索" class="searchbutton" />
         </form>
       </div>
-      <next class="notice" :style="scrollNotice" />
+      <div class="notice"><next :style="scrollNotice" /></div>
     </div>
     <div class="myToDoList" v-if="isHide">
       <todolist />
@@ -227,10 +226,12 @@ onMounted(() => {
 }
 
 .notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  bottom: 15%;
-  left: 48;
   z-index: 20;
+  bottom: 18%;
 }
 
 .page-search {
@@ -247,46 +248,17 @@ onMounted(() => {
   top: 10%;
   z-index: 20;
 }
-
-@media (max-width: 768px) {
-  .page-search {
-    width: 10rem;
-  }
-
-  .serachbody {
-    width: 10rem;
-  }
-
-  .myToDoList {
-    position: fixed;
-    display: none;
-  }
-
-  .page-text {
-    font-size: 24px;
-  }
-
-  .myclock {
-    display: none;
-  }
-
-  .notice {
-    left: 30%;
-  }
-}
-
 .serachbody {
   width: 20rem;
   height: 36px;
   border-radius: 15px;
-  transition: 0.5s ease-in-out;
+  transition: 0.5s all ease-in-out;
   background-color: rgba(251, 250, 250, 0.466);
   color: rgb(0, 0, 0);
   border: 0px;
   box-shadow: 1px 2px 3.1px 0.5px rgba(213, 211, 211, 0.866);
   padding: 10px;
 }
-
 .serachbody:focus {
   outline: none;
   width: 25rem;
@@ -300,5 +272,32 @@ onMounted(() => {
 
 .searchbutton {
   display: none;
+}
+@media (max-width: 768px) {
+  .serachbody {
+    width: 13rem;
+  }
+  .serachbody:focus {
+    outline: none;
+    width: 18rem;
+    border: 0;
+  }
+
+  .serachbody:hover {
+    width: 18rem;
+    box-shadow: 3px 4px 3.1px 0.5px rgba(213, 211, 211, 0.866);
+  }
+  .myToDoList {
+    position: fixed;
+    display: none;
+  }
+
+  .page-text {
+    font-size: 24px;
+  }
+
+  .myclock {
+    display: none;
+  }
 }
 </style>

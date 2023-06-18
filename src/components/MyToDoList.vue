@@ -8,7 +8,7 @@
         <input type="text" v-if="showinput" @keyup.enter="addList" v-model="inputValue" />
       </transition>
 
-      <button @click="addList" @mouseover="showAdd" class="addlist">+</button>
+      <button @click="showAdd" class="addlist">+</button>
     </div>
 
     <draggable :list="todolists" animation="300" tag="transition-group">

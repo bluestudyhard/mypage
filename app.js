@@ -88,9 +88,9 @@ app.get("/todos", (req, res) => {
 // 插入数据
 app.post("/todos", (req, res) => {
   console.log(req.body);
-  const { text, done } = req.body;
-  console.log(text, done);
-  const sqlStr = `INSERT INTO mylist (text,done) VALUES ('${text}',${done})`;
+  const { text, done,time } = req.body;
+  console.log(text, done, time);
+  const sqlStr = `INSERT INTO mylist (text,done,time) VALUES ('${text}',${done},'${time}')`;
   connection.query(sqlStr, (err, results) => {
     if (err) {
       console.log("err" + err.message);

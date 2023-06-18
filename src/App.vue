@@ -3,10 +3,10 @@ import { ref, reactive, watch, computed } from "vue";
 </script>
 
 <template>
-  <nav>
+  <!-- <nav>
     <router-link to="/">Home</router-link>
     <router-link to="/canvas">画板</router-link>
-  </nav>
+  </nav> -->
   <router-view />
 </template>
 

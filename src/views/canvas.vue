@@ -77,18 +77,16 @@
 
   @return unquote($value)
 
-$shadows-small:  multiple-box-shadow(700)
+$shadows-small: multiple-box-shadow(700)
 $shadows-medium: multiple-box-shadow(200)
-$shadows-big:    multiple-box-shadow(100)
-
-
+$shadows-big: multiple-box-shadow(100)
 
 #stars
   width: 1px
   height: 1px
   background: transparent
   box-shadow: $shadows-small
-  animation			: animStar 50s linear infinite
+  animation: animStar 50s linear infinite
 
   &:after
     content: " "
@@ -104,7 +102,7 @@ $shadows-big:    multiple-box-shadow(100)
   height: 2px
   background: transparent
   box-shadow: $shadows-medium
-  animation			: animStar 100s linear infinite
+  animation: animStar 100s linear infinite
 
   &:after
     content: " "
@@ -120,7 +118,7 @@ $shadows-big:    multiple-box-shadow(100)
   height: 3px
   background: transparent
   box-shadow: $shadows-big
-  animation			: animStar 150s linear infinite
+  animation: animStar 150s linear infinite
 
   &:after
     content: " "

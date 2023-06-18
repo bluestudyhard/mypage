@@ -1,22 +1,22 @@
 <script setup>
-import { ref, reactive, watch, computed, onMounted, watchEffect } from "vue";
-import myclock from "../components/myclock.vue";
-import todolist from "../components/MyToDoList.vue";
-import next from "../components/PageNext.vue";
-import star from "../components/star.vue";
-import backimg1 from "@/assets/images/page8.webp";
-import backimg2 from "@/assets/images/page2.webp";
-import backimg3 from "@/assets/images/page12.webp";
+import { ref, reactive, watch, computed, onMounted, watchEffect } from 'vue';
+import myclock from '../components/myclock.vue';
+import todolist from '../components/MyToDoList.vue';
+import next from '../components/PageNext.vue';
+import star from '../components/star.vue';
+import backimg1 from '@/assets/images/page8.webp';
+import backimg2 from '@/assets/images/page2.webp';
+import backimg3 from '@/assets/images/page12.webp';
 const isHide = ref(false);
 const isfoucus = ref(false);
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 const router = useRouter();
 const scrolled = ref(0);
 
 const onSearch = computed(() => ({
-  transform: "scale(1.1)",
-  filter: "blur(3px)",
-  transition: "all 1.1s ease-in-out",
+  transform: 'scale(1.1)',
+  filter: 'blur(3px)',
+  transition: 'all 1.1s ease-in-out'
 }));
 
 /**
@@ -24,7 +24,7 @@ const onSearch = computed(() => ({
  *
  */
 // scroll event
-const handleScroll = (e) => {
+const handleScroll = e => {
   let scrollTop = document.documentElement.scrollTop; // 滚动条滚动的距离
   let scrollHeight = document.documentElement.scrollHeight; // 滚动页面的总高度
   let clientHeight = document.documentElement.clientHeight; // 可视区域的高度
@@ -38,7 +38,7 @@ const handleScroll = (e) => {
   // console.log(scrolled.value);
 };
 
-const getImageUrl = (scroll) => {
+const getImageUrl = scroll => {
   if (scroll <= 0.2) {
     return `url(${backimg1})`;
   } else if (scroll <= 0.4 && scroll > 0.2) {
@@ -59,55 +59,49 @@ const changeBackGround = computed(() => ({
   //     : 1,
 
   backgroundImage: `${getImageUrl(scrolled.value)}`,
-  transition: "all 1.1s ",
+  transition: 'all 1.1s '
 }));
 
 const scrollStar = computed(() => ({
   opacity: scrolled.value > 0.6 ? (1 - scrolled.value) / 0.1 : 0,
-  transition: "all 0.8s ease-in-out",
+  transition: 'all 0.8s ease-in-out'
 }));
 
 const scrollSerach = computed(() => ({
   opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
-  transition: "all 0.8s ease-in-out",
+  transition: 'all 0.8s ease-in-out'
 }));
 
 const scrollText = computed(() => ({
   opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
   marginTop:
     scrolled.value <= 0.2 && scrolled.value > 0
-      ? scrolled.value * -1.2 * 500 + "px"
-      : scrolled.value * 1.2 * 500 + "px",
-  transition: "all 0.8s ",
+      ? scrolled.value * -1.2 * 500 + 'px'
+      : scrolled.value * 1.2 * 500 + 'px',
+  transition: 'all 0.8s '
 }));
 
 const scrollTextSecond = computed(() => ({
-  opacity:
-    scrolled.value <= 0.4 && scrolled.value > 0.2
-      ? Math.abs(0.1 - scrolled.value) / 0.1
-      : 0,
+  opacity: scrolled.value <= 0.4 && scrolled.value > 0.2 ? Math.abs(0.1 - scrolled.value) / 0.1 : 0,
   marginTop:
     scrolled.value <= 0.4 && scrolled.value > 0.2
-      ? scrolled.value * -0.5 * 500 + "px"
-      : scrolled.value * 0.5 * 500 + "px",
-  transition: "all 0.8s ease-in-out",
+      ? scrolled.value * -0.5 * 500 + 'px'
+      : scrolled.value * 0.5 * 500 + 'px',
+  transition: 'all 0.8s ease-in-out'
 }));
 
 const scrollTextThird = computed(() => ({
-  opacity:
-    scrolled.value <= 0.6 && scrolled.value > 0.4
-      ? Math.abs(0.1 - scrolled.value) / 0.1
-      : 0,
+  opacity: scrolled.value <= 0.6 && scrolled.value > 0.4 ? Math.abs(0.1 - scrolled.value) / 0.1 : 0,
   marginTop:
     scrolled.value <= 0.6 && scrolled.value > 0.4
-      ? scrolled.value * -0.25 * 400 + "px"
-      : scrolled.value * 0.25 * 400 + "px",
-  transition: "all 0.8s ease-in-out",
+      ? scrolled.value * -0.25 * 400 + 'px'
+      : scrolled.value * 0.25 * 400 + 'px',
+  transition: 'all 0.8s ease-in-out'
 }));
 
 const scrollNotice = computed(() => ({
   opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
-  transition: "all 0.8s ease-in-out",
+  transition: 'all 0.8s ease-in-out'
 }));
 
 watchEffect(() => {
@@ -116,29 +110,23 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
+  window.addEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
   <div class="home">
     <div class="mask">
-      <div
-        :style="isfoucus ? onSearch : changeBackGround"
-        draggable="false"
-        class="bg"
-      ></div>
+      <div :style="isfoucus ? onSearch : changeBackGround" draggable="false" class="bg"></div>
       <star class="star" :style="scrollStar" />
       <h1 class="page-text" :style="scrollText">welcome to blue's new page</h1>
-      <h1 class="page-text" :style="scrollTextSecond">
-        Here i will show something about me...
-      </h1>
+      <h1 class="page-text" :style="scrollTextSecond">Here i will show something about me...</h1>
       <h1 class="page-text" :style="scrollTextThird">ready? go!</h1>
       <myclock class="myclock" v-if="isHide" />
       <div class="page-search">
         <form
           method="get"
-          action="https://www.bing.com/search"
+          action="https://www.google.com/search?"
           target="_blank"
           :style="scrollSerach"
         >
@@ -176,7 +164,7 @@ onMounted(() => {
   z-index: 0;
   /* 保持宽高比 */
   object-fit: cover;
-  background-image: url("/public/page8.webp");
+  background-image: url('/public/page8.webp');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -190,6 +178,7 @@ onMounted(() => {
   z-index: 10;
   opacity: 0;
 }
+
 .mask {
   display: flex;
   flex-direction: column;
@@ -212,6 +201,7 @@ onMounted(() => {
   opacity: 1;
   margin-top: 0px;
 }
+
 .page-text-second {
   position: absolute;
   top: 50%;
@@ -222,11 +212,13 @@ onMounted(() => {
   opacity: 1;
   margin-top: 0px;
 }
+
 .myclock {
   position: fixed;
   top: 0;
   left: 0;
 }
+
 /** todolist */
 .myToDoList {
   position: fixed;
@@ -240,6 +232,7 @@ onMounted(() => {
   left: 48;
   z-index: 20;
 }
+
 .page-search {
   display: flex;
   align-items: center;
@@ -254,27 +247,34 @@ onMounted(() => {
   top: 10%;
   z-index: 20;
 }
+
 @media (max-width: 768px) {
   .page-search {
     width: 10rem;
   }
+
   .serachbody {
     width: 10rem;
   }
+
   .myToDoList {
     position: fixed;
     display: none;
   }
+
   .page-text {
     font-size: 24px;
   }
+
   .myclock {
     display: none;
   }
+
   .notice {
     left: 30%;
   }
 }
+
 .serachbody {
   width: 20rem;
   height: 36px;
@@ -286,6 +286,7 @@ onMounted(() => {
   box-shadow: 1px 2px 3.1px 0.5px rgba(213, 211, 211, 0.866);
   padding: 10px;
 }
+
 .serachbody:focus {
   outline: none;
   width: 25rem;

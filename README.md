@@ -1,7 +1,8 @@
 # myPage
 拿vue3简单重构(重写)了一下之前的渣标签页。。然后加了一些最近学的一些花里胡哨的东西and一些小想法，后续会继续完善一堆一堆功能，目前待定的就是chatBot。。。and。。touchToy
 
-
+## url
+https://mypage.blueltytblog.top
 
 ## Recommended IDE Setup
 

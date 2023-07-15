@@ -382,4 +382,5 @@ onMounted(() => {
   opacity: 0;
   transform: translateX(30px);
 }
+
 </style>

@@ -9,8 +9,6 @@ import backimg2 from '@/assets/images/page2.webp';
 import backimg3 from '@/assets/images/page12.webp';
 const isHide = ref(false);
 const isfoucus = ref(false);
-import { useRouter } from 'vue-router';
-const router = useRouter();
 const scrolled = ref(0);
 
 const onSearch = computed(() => ({
@@ -20,7 +18,7 @@ const onSearch = computed(() => ({
 }));
 
 /**
- * scrolled表示滚动条的滚动区间，[0,0.2] (0.2,0.4] (0.4,0.6] (0.6,1] 分别有不同的效果
+ * scrolled表示滚动条的滚动区间，[0,0.25] (0.25,0.5] (0.5,0.75] (0.75,1] 分别有不同的效果
  *
  */
 // scroll event
@@ -36,12 +34,13 @@ const handleScroll = e => {
   //   }, 2000);
   // }
   // console.log(scrolled.value);
+  // console.log('scrollHeight: '+ scrollHeight, 'clientHeight: '+ clientHeight, 'scrollTop: '+ scrollTop);
 };
 
 const getImageUrl = scroll => {
-  if (scroll <= 0.2) {
+  if (scroll <= 0.25) {
     return `url(${backimg1})`;
-  } else if (scroll <= 0.4 && scroll > 0.2) {
+  } else if (scroll <= 0.5 && scroll > 0.25) {
     return `url(${backimg2})`;
   } else {
     return `url(${backimg3})`;
@@ -49,63 +48,52 @@ const getImageUrl = scroll => {
 };
 
 const changeBackGround = computed(() => ({
-  // opacity:
-  //   scrolled.value <= 0.2
-  //     ? (0.1 - scrolled.value) / 0.1
-  //     : scrolled.value <= 0.4 && scrolled.value > 0.2
-  //     ? (0.31 - scrolled.value) / 0.1
-  //     : scrolled.value <= 0.6 && scrolled.value > 0.4
-  //     ? (0.49 - scrolled.value) / 0.1
-  //     : 1,
-
   backgroundImage: `${getImageUrl(scrolled.value)}`,
   transition: 'all 1.1s '
 }));
+/**滚动改变透明度以及移动函数 */
+const generateScrollStyle = (opacityRange, marginTopValue) => {
+  let opacity = opacityRange[1] * 0.8;
+  return computed(() => ({
+    opacity:
+      scrolled.value >= opacityRange[0] && scrolled.value <= opacityRange[1]
+        ? (opacity - scrolled.value) / 0.1
+        : 0,
+    marginTop:
+      scrolled.value > opacityRange[0] && scrolled.value <= opacityRange[1]
+        ? scrolled.value * -marginTopValue * 500 + 'px'
+        : scrolled.value * marginTopValue * 500 + 'px',
+    transition: 'all 0.8s ease-in-out'
+  }));
+};
 
+const scrollTextList = computed(() => [
+  {
+    text: "welcome to blue's new page",
+    style: generateScrollStyle([0, 0.25], 1.2).value
+  },
+  {
+    text: 'Here i will show something about me...',
+    style: generateScrollStyle([0.25, 0.5], 0.5).value
+  },
+  {
+    text: 'ready? go!',
+    style: generateScrollStyle([0.5, 0.75], 0.25).value
+  }
+]);
+const scrollNotice = generateScrollStyle([0, 0.25], 0);
+const scrollSerach = generateScrollStyle([0, 0.25], 0);
 const scrollStar = computed(() => ({
-  opacity: scrolled.value > 0.6 ? (1 - scrolled.value) / 0.1 : 0,
+  opacity: scrolled.value > 0.75 ? 1 : 0,
   transition: 'all 0.8s ease-in-out'
 }));
 
-const scrollSerach = computed(() => ({
-  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
-  transition: 'all 0.8s ease-in-out'
-}));
-
-const scrollText = computed(() => ({
-  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
-  marginTop:
-    scrolled.value <= 0.2 && scrolled.value > 0
-      ? scrolled.value * -1.2 * 500 + 'px'
-      : scrolled.value * 1.2 * 500 + 'px',
-  transition: 'all 0.8s '
-}));
-
-const scrollTextSecond = computed(() => ({
-  opacity: scrolled.value <= 0.4 && scrolled.value > 0.2 ? Math.abs(0.1 - scrolled.value) / 0.1 : 0,
-  marginTop:
-    scrolled.value <= 0.4 && scrolled.value > 0.2
-      ? scrolled.value * -0.5 * 500 + 'px'
-      : scrolled.value * 0.5 * 500 + 'px',
-  transition: 'all 0.8s ease-in-out'
-}));
-
-const scrollTextThird = computed(() => ({
-  opacity: scrolled.value <= 0.6 && scrolled.value > 0.4 ? Math.abs(0.1 - scrolled.value) / 0.1 : 0,
-  marginTop:
-    scrolled.value <= 0.6 && scrolled.value > 0.4
-      ? scrolled.value * -0.25 * 400 + 'px'
-      : scrolled.value * 0.25 * 400 + 'px',
-  transition: 'all 0.8s ease-in-out'
-}));
-
-const scrollNotice = computed(() => ({
-  opacity: scrolled.value <= 0.2 ? (0.1 - scrolled.value) / 0.1 : 0,
-  transition: 'all 0.8s ease-in-out'
-}));
+/**监听区 */
 
 watchEffect(() => {
   isHide.value = scrolled.value > 0.25 ? false : true;
+  // console.log(scrolled.value);
+  // console.log(generateScrollStyle([0, 0.25], 1.2).value);
 });
 
 /**预先加载背景图片 */
@@ -127,9 +115,11 @@ onMounted(() => {
     <div class="mask">
       <div :style="isfoucus ? onSearch : changeBackGround" draggable="false" class="bg"></div>
       <star class="star" :style="scrollStar" />
-      <h1 class="page-text" :style="scrollText">welcome to blue's new page</h1>
-      <h1 class="page-text" :style="scrollTextSecond">Here i will show something about me...</h1>
-      <h1 class="page-text" :style="scrollTextThird">ready? go!</h1>
+      <div class="pageText" v-for="text in scrollTextList" :key="text">
+        <h1 class="page-text" :style="text.style">
+          {{ text.text }}
+        </h1>
+      </div>
       <myclock class="myclock" v-if="isHide" />
       <div class="page-search">
         <form
@@ -197,6 +187,12 @@ onMounted(() => {
   overflow: hidden;
   top: 0;
   position: sticky;
+}
+.pageText {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .page-text {

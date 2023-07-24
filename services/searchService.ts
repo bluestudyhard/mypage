@@ -1,11 +1,11 @@
 import { from } from "rxjs";
 import { map } from "rxjs/operators";
 import { HttpClient } from "@ngify/http";
-import Bing_SEARCH_API_KEY from "../apiconfig.js";
+// vite 获取环境变量
 
 const http = new HttpClient();
 // env中获取 Bing 搜索 API 的 key
-
+const Bing_SEARCH_API_KEY = "af5cbc4e2d464da4a3da3607510a36e4";
 const apiKey: string | undefined = Bing_SEARCH_API_KEY;
 
 const headers: any = {

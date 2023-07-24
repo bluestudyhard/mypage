@@ -1,11 +1,12 @@
 <script setup>
-import { ref, reactive, watch, computed } from "vue";
+import { ref, reactive, watch, computed } from 'vue';
 </script>
 
 <template>
   <!-- <nav>
     <router-link to="/">Home</router-link>
     <router-link to="/canvas">画板</router-link>
+    <router-link to="/search">search</router-link>
   </nav> -->
   <router-view />
 </template>
@@ -19,6 +20,7 @@ nav {
   background-color: transparent;
   position: fixed;
   top: 0;
+  z-index: 1000;
 }
 nav a {
   margin: 0 10px 0px 0px;

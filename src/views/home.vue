@@ -4,11 +4,12 @@ import myclock from '../components/myclock.vue';
 import todolist from '../components/MyToDoList.vue';
 import next from '../components/PageNext.vue';
 import star from '../components/star.vue';
+import search from '../components/search.vue';
 import backimg1 from '@/assets/images/page8.webp';
 import backimg2 from '@/assets/images/page2.webp';
 import backimg3 from '@/assets/images/page12.webp';
 const isHide = ref(false);
-const isfoucus = ref(false);
+const searchFocus = ref(false);
 const scrolled = ref(0);
 
 const onSearch = computed(() => ({
@@ -16,6 +17,8 @@ const onSearch = computed(() => ({
   filter: 'blur(3px)',
   transition: 'all 1.1s ease-in-out'
 }));
+
+// 接受子组件的searchFocus事件
 
 /**
  * scrolled表示滚动条的滚动区间，[0,0.25] (0.25,0.5] (0.5,0.75] (0.75,1] 分别有不同的效果
@@ -108,12 +111,21 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   preloadImages();
 });
+// 接收子组件，监听搜索框的focus事件
+const handleFocusChange = isfocus => {
+  searchFocus.value = isfocus;
+  console.log(searchFocus.value);
+};
+const handleFocusblur = isfocus => {
+  searchFocus.value = isfocus;
+  console.log(searchFocus.value);
+};
 </script>
 
 <template>
   <div class="home">
     <div class="mask">
-      <div :style="isfoucus ? onSearch : changeBackGround" draggable="false" class="bg"></div>
+      <div :style="searchFocus ? onSearch : changeBackGround" draggable="false" class="bg"></div>
       <star class="star" :style="scrollStar" />
       <div class="pageText" v-for="text in scrollTextList" :key="text">
         <h1 class="page-text" :style="text.style">
@@ -121,25 +133,12 @@ onMounted(() => {
         </h1>
       </div>
       <myclock class="myclock" v-if="isHide" />
-      <div class="page-search">
-        <form
-          method="get"
-          action="https://www.google.com/search?"
-          target="_blank"
-          :style="scrollSerach"
-        >
-          <input
-            type="text"
-            class="serachbody"
-            placeholder="请输入内容"
-            name="q"
-            autocomplete="off"
-            @focus="isfoucus = true"
-            @blur="isfoucus = false"
-          />
-          <input type="submit" value="搜索" class="searchbutton" />
-        </form>
-      </div>
+      <search
+        class="page-search"
+        :style="scrollSerach"
+        @changeFoucus="handleFocusChange"
+        @missFocus="handleFocusblur"
+      />
       <div class="notice"><next :style="scrollNotice" /></div>
     </div>
     <div class="myToDoList" v-if="isHide">
@@ -201,18 +200,7 @@ onMounted(() => {
   color: rgb(36, 33, 33);
   font-family: Helvetica;
   letter-spacing: 1px;
-  font-size: 36px;
-  opacity: 1;
-  margin-top: 0px;
-}
-
-.page-text-second {
-  position: absolute;
-  top: 50%;
-  color: rgb(36, 33, 33);
-  font-family: Helvetica;
-  letter-spacing: 1px;
-  font-size: 36px;
+  font-size: 30px;
   opacity: 1;
   margin-top: 0px;
 }
@@ -244,54 +232,17 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   width: 50%;
-  height: 100px;
   margin: 0 auto;
   text-align: center;
   line-height: 50px;
   margin-top: 5%;
   position: fixed;
-  top: 10%;
+  top: 20%;
   z-index: 20;
 }
-.serachbody {
-  width: 20rem;
-  height: 36px;
-  border-radius: 15px;
-  transition: 0.5s all ease-in-out;
-  background-color: rgba(251, 250, 250, 0.466);
-  color: rgb(0, 0, 0);
-  border: 0px;
-  box-shadow: 1px 2px 3.1px 0.5px rgba(213, 211, 211, 0.866);
-  padding: 10px;
-}
-.serachbody:focus {
-  outline: none;
-  width: 25rem;
-  border: 0;
-}
 
-.serachbody:hover {
-  width: 25rem;
-  box-shadow: 3px 4px 3.1px 0.5px rgba(213, 211, 211, 0.866);
-}
-
-.searchbutton {
-  display: none;
-}
 @media (max-width: 768px) {
-  .serachbody {
-    width: 13rem;
-  }
-  .serachbody:focus {
-    outline: none;
-    width: 18rem;
-    border: 0;
-  }
 
-  .serachbody:hover {
-    width: 18rem;
-    box-shadow: 3px 4px 3.1px 0.5px rgba(213, 211, 211, 0.866);
-  }
   .myToDoList {
     position: fixed;
     display: none;

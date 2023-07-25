@@ -3,7 +3,7 @@
     <input
       type="text"
       v-model="searchTerm"
-      @input="onSearchInput"
+      ref="searchType"
       @focus="changeFocus"
       @blur="missFocus"
       class="search-body"
@@ -23,13 +23,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { onMounted, ref } from 'vue';
+import { fromEvent, Subject } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  switchMap,
+  takeUntil,
+  map,
+  tap,
+  take
+} from 'rxjs/operators';
 import { searchService } from '../../services/searchService';
 
 const searchTerm = ref('');
 const searchResults = ref([]);
+const searchType = ref(HTMLInputElement);
 const searchSubject = new Subject();
 const cancelSearch = new Subject();
 const emits = defineEmits(['changeFoucus', 'missFocus']);
@@ -43,24 +53,50 @@ const changeFocus = () => {
 const missFocus = () => {
   isfocus.value = false;
   emits('missFocus', isfocus.value);
-  setTimeout(() => {
-    cancleSubscribe();
-  }, 300);
 };
 
 const cancleSubscribe = () => {
   cancelSearch.next(); // 发出取消订阅的信号
   searchResults.value = []; // 清空搜索结果
 };
+
+// 这里其实不能绑定@input事件，因为这样会导致每次输入都会触发，而我们需要的是输入完成后才触发
+// 而且如果要使用dom的话要在onMounted里面使用，因为这个时候dom才会被渲染出来
+onMounted(() => {
+  fromEvent(searchType.value, 'input')
+    .pipe(
+      map(event => event.target.value),
+      tap(term => {
+        if (term === '') {
+          cancleSubscribe();
+        }
+      }),
+      debounceTime(800), // 设置节流时间
+      distinctUntilChanged(), // 直到有新的输入才会创建新的流
+      filter(term => term !== ''), // 过滤掉空字符串
+      switchMap(term => searchService.search(term)) // 切换到新的流
+    )
+    .subscribe(results => {
+      searchResults.value = results;
+    });
+  // 除了点击搜索框，其他地方点击都会取消订阅
+  fromEvent(document, 'click')
+    .pipe(
+      tap(e => {
+        if (e.target !== searchType.value) {
+          cancleSubscribe();
+        }
+      })
+    )
+    .subscribe();
+});
+
 const onSearchInput = () => {
-  if (searchTerm.value === '') {
-    cancleSubscribe();
-    return;
-  }
   searchSubject
     .pipe(
       debounceTime(800), // 设置节流时间
       distinctUntilChanged(), // 直到有新的输入才会创建新的流
+      filter(term => term !== ''), // 过滤掉空字符串
       switchMap(term => searchService.search(term)), // 切换到新的流
       takeUntil(cancelSearch)
     )

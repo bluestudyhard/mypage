@@ -156,7 +156,7 @@ const navigateTo = url => {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   clear: both;
-  padding-left: 1.5rem;
+  padding-left: 1rem;
   font-size: 13px;
   transition: all 0.25s;
   cursor: pointer;

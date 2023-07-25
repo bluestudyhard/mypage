@@ -1,14 +1,18 @@
 <template>
   <div class="container">
-    <input
-      type="text"
-      v-model="searchTerm"
-      ref="searchType"
-      @focus="changeFocus"
-      @blur="missFocus"
-      class="search-body"
-      placeholder="请输入内容"
-    />
+    <form method="get" action="https://www.bing.com/search?" target="_blank">
+      <input
+        type="search"
+        v-model="searchTerm"
+        ref="searchType"
+        @focus="changeFocus"
+        @blur="missFocus"
+        class="search-body"
+        placeholder="请输入内容"
+        name="q"
+        autocomplete="off"
+      />
+    </form>
     <div class="search-results">
       <div
         class="results-item"

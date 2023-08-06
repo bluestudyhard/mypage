@@ -1,17 +1,6 @@
 <template>
   <div class="container">
-    <!-- 其他组件内容 -->
 
-    <!-- <div class="nav">
-      <div class="nav_left">
-        <div class="nav_left_logo">
-          <img src="../assets/logo.png" alt="" />
-        </div>
-        <div class="nav_left_title">
-          <h1>My Blog</h1>
-        </div>
-      </div>
-    </div> -->
 
     <div id="stars"></div>
     <div id="stars2"></div>

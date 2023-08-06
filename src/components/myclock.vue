@@ -46,11 +46,11 @@ onMounted(() => {
   setAM();
   setInterval(() => {
     current1.value = new Date().toLocaleString();
-    currentTime.value = current1.value.substring(10, 15);
+    currentTime.value = current1.value.substring(9, 15);
     hours.value = current.value.getHours();
     minutes.value = current.value.getMinutes();
   }, 1000);
-  
+  console.log(currentTime.value);
 });
 </script>
 
@@ -163,6 +163,9 @@ onMounted(() => {
     position: relative;
     bottom: 4px;
     border-bottom: 0.1px solid #93919171;
+  }
+  .clock_mounth {
+    padding-right: 0.3rem;
   }
 }
 </style>

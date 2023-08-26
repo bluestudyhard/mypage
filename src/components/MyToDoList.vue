@@ -5,7 +5,7 @@
     </div>
     <div class="listHeader">
       <transition name="addText">
-        <input type="text" v-if="showinput" @keyup.enter="addList" v-model="inputValue" />
+        <input type="text" v-if="showinput" @keydown.enter="addItem" v-model="inputValue" />
       </transition>
 
       <button @click="showAdd" class="addlist">+</button>
@@ -40,70 +40,44 @@
       </button>
     </div>
   </div>
-
-  <!-- <draggable :list="lists" animation="300" tag="transition-group">
-    <template #item="{ element, index }">
-      <div class="myList">
-        <div class="listItem">
-          <li>
-            <span class="title"
-              ><input
-                type="checkbox"
-                v-model="element.done"
-                @click="isdone(element)"
-                :class="{ chekboxDone: element.done }"
-              />
-              title
-            </span>
-            <span class="content" :class="{ done: element.done }"
-              >{{ index + 1 }}.{{ element.text }}</span
-            >
-          </li>
-        </div>
-      </div>
-    </template>
-  </draggable> -->
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, watch, computed, onMounted } from 'vue';
+import { ListType, ItemType } from '../types/listype';
 import draggable from 'vuedraggable';
-import axios from 'axios';
+import { getLists, addList, deleteList, updateList } from '../../services/getTodo';
 const inputValue = ref('');
-const lists = ref([]);
-const id = ref(1);
+const lists = ref<ListType[]>([]);
 const showinput = ref(false);
 let compeleted = ref(true);
 const time = ref('');
-// 使用axios 访问服务器
+time.value = new Date().toLocaleDateString().slice(0, 9);
+// 将里面的斜杠替换成.
+time.value = time.value.replace(/\//g, '.');
+
 const showLists = async () => {
-  const res = await axios.get('http://localhost:3000/todos');
-  // lists.value = res.data.map((list, index) => {
-  //   list.id = index + 1;
-  //   return list;
-  // });
-  lists.value = res.data;
-  // console.log(lists.value);
+  lists.value = await getLists();
+  lists.value = lists.value.filter(list => list.time === time.value);
 };
 
 // 添加list
-const addList = async () => {
+const addItem = async () => {
   if (inputValue.value.trim() === '') {
     alert('请输入内容');
     return;
   }
-  time.value = new Date().toLocaleDateString().slice(0, 9);
-  // 将里面的斜杠替换成.
-  time.value = time.value.replace(/\//g, '.');
+
   // 如果里面的月份，天数是个位数，就在前面加0
   // axios 自动转换为json
-  const response = await axios.post('http://localhost:3000/todos', {
+  const item: ListType = {
     text: inputValue.value,
+    time: time.value,
     done: false,
-    time: time.value
-  });
-  console.log(response.data);
-  const list = response.data;
+    data: []
+  };
+  const res = await addList(item);
+  const list: any = res;
   lists.value.push(list);
   inputValue.value = '';
   showLists();
@@ -117,13 +91,12 @@ const showAdd = () => {
 // 删除list
 async function removeList(index, listID) {
   if (confirm('确定删除改项吗？') === false) return;
-  else {
-    lists.value.splice(index, 1);
-    console.log(listID);
-    const response = await axios.delete(`http://localhost:3000/todos/${listID}`);
-    console.log(response.data);
-    showLists();
-  }
+
+  lists.value.splice(index, 1);
+  console.log(listID);
+  const res = await deleteList(listID);
+  console.log(res);
+  showLists();
 }
 // 隐藏完成事项
 const todolists = computed(() => {
@@ -132,19 +105,9 @@ const todolists = computed(() => {
 
 const isdone = async list => {
   list.done = !list.done;
-  const response = await axios.put(`http://localhost:3000/todos/${list.id}`, {
-    done: list.done
-  });
-  console.log(response.data);
+  const res = await updateList(list);
+  console.log(res);
 };
-
-/**使用axios 访问服务器 */
-const getData = async () => {
-  const res = await axios.get('http://localhost:3000/');
-  console.log(res.data);
-};
-
-getData();
 
 onMounted(() => {
   showLists();
@@ -196,9 +159,9 @@ onMounted(() => {
 }
 
 .listHeader input {
-  width: 123px;
+  width: 7.9rem;
   min-height: 15px;
-  padding: 2px;
+  padding: 1px 1px 1px 3px;
   border-radius: 5px;
   font-size: 12px;
   transition: all 0.5s ease;
@@ -208,8 +171,8 @@ onMounted(() => {
   border-style: none;
   border-bottom: 1px solid white;
   color: rgb(86, 85, 85);
-  font-family: 'Noto Serif SC', serif;
-  font-weight: 600;
+  font-family: pingfang SC, PingFang SC, Microsoft YaHei, Helvetica Neue;
+  font-weight: 500;
   /**只给底部边框加阴影 */
   box-shadow: 0 2px 0 #999;
 }
@@ -382,5 +345,4 @@ onMounted(() => {
   opacity: 0;
   transform: translateX(30px);
 }
-
 </style>

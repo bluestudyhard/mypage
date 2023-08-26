@@ -1,5 +1,9 @@
 <script setup>
 import { ref, reactive, watch, computed, onMounted, watchEffect } from 'vue';
+import { useWindowScroll } from '@vueuse/core';
+import { useWindowSize } from '@vueuse/core';
+const { width, height } = useWindowSize();
+const { x, y } = useWindowScroll();
 import myclock from '../components/myclock.vue';
 import todolist from '../components/MyToDoList.vue';
 import next from '../components/PageNext.vue';
@@ -26,9 +30,9 @@ const onSearch = computed(() => ({
  */
 // scroll event
 const handleScroll = e => {
-  let scrollTop = document.documentElement.scrollTop; // 滚动条滚动的距离
+  let scrollTop = y.value; // 滚动条滚动的距离
   let scrollHeight = document.documentElement.scrollHeight; // 滚动页面的总高度
-  let clientHeight = document.documentElement.clientHeight; // 可视区域的高度
+  let clientHeight = height.value; // 可视区域的高度 ==height.value
 
   scrolled.value = scrollTop / (scrollHeight - clientHeight); // [0,1)
   // if (scrolled.value > 0.8) {
@@ -95,6 +99,7 @@ const scrollStar = computed(() => ({
 
 watchEffect(() => {
   isHide.value = scrolled.value > 0.25 ? false : true;
+  // console.log(width.value, height.value, x.value, y.value);
   // console.log(scrolled.value);
   // console.log(generateScrollStyle([0, 0.25], 1.2).value);
 });
@@ -242,7 +247,6 @@ const handleFocusblur = isfocus => {
 }
 
 @media (max-width: 768px) {
-
   .myToDoList {
     position: fixed;
     display: none;

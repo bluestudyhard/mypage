@@ -3,11 +3,12 @@ import { ref, reactive, watch, computed } from 'vue';
 </script>
 
 <template>
-  <!-- <nav>
+  <nav>
     <router-link to="/">Home</router-link>
     <router-link to="/canvas">画板</router-link>
-    <router-link to="/search">search</router-link>
-  </nav> -->
+    <router-link to="/testcaos">test</router-link>
+    <!-- <router-link to="/search">search</router-link> -->
+  </nav>
   <router-view />
 </template>
 

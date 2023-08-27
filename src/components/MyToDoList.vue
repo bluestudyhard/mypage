@@ -38,23 +38,22 @@
       <button @click="compeleted = !compeleted" class="complete">
         {{ compeleted ? 'showall' : 'HideCompleted' }}
       </button>
+      <calendar class="calendar" @handleDateChange="handleDateUpdated" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, computed, onMounted } from 'vue';
+import { ref, reactive, watch, computed, onMounted, watchEffect } from 'vue';
 import { ListType, ItemType } from '../types/listype';
 import draggable from 'vuedraggable';
 import { getLists, addList, deleteList, updateList } from '../../services/getTodo';
+import calendar from '../components/calendar.vue';
 const inputValue = ref('');
 const lists = ref<ListType[]>([]);
 const showinput = ref(false);
 let compeleted = ref(true);
 const time = ref('');
-time.value = new Date().toLocaleDateString().slice(0, 9);
-// 将里面的斜杠替换成.
-time.value = time.value.replace(/\//g, '.');
 
 const showLists = async () => {
   lists.value = await getLists();
@@ -108,9 +107,21 @@ const isdone = async list => {
   const res = await updateList(list);
   console.log(res);
 };
+const handleDateUpdated: any = (val: any) => {
+  if (val === null) return;
+  time.value = val;
+  showLists();
+};
 
 onMounted(() => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  time.value = `${year}.${String(month).padStart(2, '0')}.${day}`;
+
   showLists();
+  console.log(time.value);
 });
 </script>
 
@@ -344,5 +355,9 @@ onMounted(() => {
 .toDoList-leave-to {
   opacity: 0;
   transform: translateX(30px);
+}
+.calendar {
+  position: absolute;
+  right: 3rem;
 }
 </style>

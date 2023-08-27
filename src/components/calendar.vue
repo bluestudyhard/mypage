@@ -61,3 +61,11 @@ watchEffect(() => {
   background: none;
 }
 </style>
+<style scoped>
+.calendear {
+  border: none;
+  outline: none;
+  width: 0.2rem !important;
+  background: none;
+}
+</style>

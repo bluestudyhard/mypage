@@ -17,9 +17,8 @@ const searchFocus = ref(false);
 const scrolled = ref(0);
 
 const onSearch = computed(() => ({
-  transform: 'scale(1.1)',
-  filter: 'blur(3px)',
-  transition: 'all 1.1s ease-in-out'
+  transform: ' scale(1.1)',
+  filter: 'blur(3px)'
 }));
 
 // 接受子组件的searchFocus事件
@@ -55,8 +54,7 @@ const getImageUrl = scroll => {
 };
 
 const changeBackGround = computed(() => ({
-  backgroundImage: `${getImageUrl(scrolled.value)}`,
-  transition: 'all 1.1s '
+  backgroundImage: `${getImageUrl(scrolled.value)}`
 }));
 /**滚动改变透明度以及移动函数 */
 const generateScrollStyle = (opacityRange, marginTopValue) => {
@@ -161,15 +159,17 @@ const handleFocusblur = isfocus => {
 .bg {
   width: 100%;
   height: 100vh;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 0;
   /* 保持宽高比 */
   object-fit: cover;
   background-image: url('/public/page8.webp');
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center center;
   background-size: cover;
+  transition: transform 1.1s, filter 1.1s ease-in-out;
+  backface-visibility: hidden;
 }
 
 .star {
@@ -258,6 +258,10 @@ const handleFocusblur = isfocus => {
 
   .myclock {
     display: none;
+  }
+  .bg {
+    background-size: cover;
+    transition: none;
   }
 }
 </style>

@@ -4,7 +4,6 @@ export interface ListType {
   text?: string;
   time: string;
   [proName: string]: any;
-  data: Array<ListType>;
 }
 export interface ItemType {
   id?: number;

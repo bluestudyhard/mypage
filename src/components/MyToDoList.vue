@@ -73,7 +73,6 @@ const addItem = async () => {
     text: inputValue.value,
     time: time.value,
     done: false,
-    data: []
   };
   const res = await addList(item);
   const list: any = res;

@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import draggable from 'vuedraggable'
+import { useSortable } from '@vueuse/integrations/useSortable'
 import type { ListType } from '../types/listype'
 import { addList, deleteList, getLists, updateList } from '../../services/getTodo'
 import calendar from '../components/calendar.vue'
+import TodoItem from './TodoItem.vue'
 
 const inputValue = ref('')
-const lists = ref<ListType[]>([])
+const lists = ref<ListType[]>(Array.from({ length: 5 }, (_, i) => ({
+  id: i,
+  text: `item ${i}`,
+  time: Date.now().toLocaleString(),
+  done: true,
+})))
 const showinput = ref(false)
 const compeleted = ref(true)
 const time = ref('')
@@ -70,6 +76,8 @@ const handleDateUpdated: any = (val: any) => {
   showLists()
 }
 
+useSortable('#todo-lists', lists)
+
 onMounted(() => {
   const date = new Date()
   const year = date.getFullYear()
@@ -89,6 +97,7 @@ onMounted(() => {
         Todo List
       </p>
     </div>
+
     <div class="listHeader">
       <transition name="addText">
         <input v-if="showinput" v-model="inputValue" type="text" @keydown.enter="addItem">
@@ -99,31 +108,17 @@ onMounted(() => {
       </button>
     </div>
 
-    <draggable :list="todolists" animation="300" tag="transition-group">
-      <template #item="{ element, index }">
-        <div class="myList">
-          <div class="listItem">
-            <li>
-              <span class="title">
-                <input
-                  v-model="element.done"
-                  type="checkbox"
-                  :class="{ chekboxDone: element.done }"
-                  @click="isdone(element)"
-                >
-                {{ element.time }}
-              </span>
-              <span class="content" :class="{ done: element.done }">
-                {{ index + 1 }}.{{ element.text }}
-              </span>
-            </li>
-            <div @click="removeList(index, element.id)">
-              x
-            </div>
-          </div>
-        </div>
-      </template>
-    </draggable>
+    <ul id="todo-lists">
+      <TodoItem
+        v-for="(list, index) in todolists"
+        :key="list.id"
+        :todo="list"
+        :index="index"
+        @isdone="isdone"
+        @removeList="removeList"
+      />
+    </ul>
+
     <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px">
       <button class="complete" @click="compeleted = !compeleted">
         {{ compeleted ? 'showall' : 'HideCompleted' }}
@@ -162,12 +157,6 @@ onMounted(() => {
   box-shadow: inset 0 0 3px 0 #9b9a9a57,
     0 2px 2px 0 #ffffff38;
   scrollbar-width: none;
-}
-
-.myList {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .listHeader {
@@ -230,11 +219,6 @@ onMounted(() => {
   box-shadow: 0px 0px 3px 0px rgba(227, 227, 227, 0.5);
 } */
 
-.listItem {
-  display: flex;
-  align-items: center;
-}
-
 .addlist {
   position: relative;
   left: 80%;
@@ -253,74 +237,6 @@ onMounted(() => {
 .addlist:hover {
   cursor: pointer;
   background: #f8384b;
-}
-
-/** todolist列表主体 */
-.myList li {
-  display: grid;
-
-  /** 定义表格宽度 */
-  grid-template-rows: 1fr 1fr;
-  width: 200px;
-
-  /** background: linear-gradient(-225deg, #ff057c80 0%, #7257d8 48%, #4cc3ff9e 100%) */
-  height: 64px;
-  padding: 3px 0 6px 10px;
-  margin: 5px;
-  overflow: auto;
-  font-size: 10px;
-  color: #fff;
-  text-align: left;
-  letter-spacing: 0.5px;
-  list-style: none;
-
-  /* background: #fe2e43a8; */
-  background: linear-gradient(to left, #54e7eca8, #86a8e7b5, #7f7fd5db);
-  backdrop-filter: blur(0);
-  border-radius: 12px;
-  box-shadow: 0 0 0 1px #908a8a26;
-  transition: all 1.5s ease;
-}
-
-.myList li:focus {
-  backdrop-filter: blur(15px);
-  transition: all 1.5s ease;
-}
-
-.myList .title {
-  display: flex;
-  font-size: 15px;
-  font-weight: bolder;
-}
-
-.content {
-  font-size: 5px;
-}
-
-.done {
-  text-decoration: line-through;
-}
-
-.myTodoList:hover {
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-}
-
-.listItem input[type='checkbox'] {
-  height: 0;
-  opacity: 0.6;
-}
-
-.listItem input[type='checkbox']::before {
-  position: relative;
-  top: 5px;
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  content: '';
-  background: #1fea4be5;
-  border: 1px solid #999;
-  border-radius: 50%;
 }
 
 .complete {

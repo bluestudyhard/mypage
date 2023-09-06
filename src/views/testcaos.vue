@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, reactive, watch, computed, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue'
+
 // import { ListType } from '../types/listype';
 // import { getLists } from '../../services/getTodo';
 // const lists = ref<ListType[]>([]);
@@ -7,41 +8,42 @@ import { ref, reactive, watch, computed, watchEffect } from 'vue';
 //   lists.value = res;
 //   console.log(lists.value);
 // });
-const size = ref<'default' | 'large' | 'small'>('small');
+const size = ref<'default' | 'large' | 'small'>('small')
 
-const value1 = ref('');
-const value2 = ref('');
+const value1 = ref('')
+const value2 = ref('')
 
 const shortcuts = [
   {
     text: 'Today',
-    value: new Date()
+    value: new Date(),
   },
   {
     text: 'Yesterday',
     value: () => {
-      const date = new Date();
-      date.setTime(date.getTime() - 3600 * 1000 * 24);
-      return date;
-    }
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      return date
+    },
   },
   {
     text: 'A week ago',
     value: () => {
-      const date = new Date();
-      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-      return date;
-    }
-  }
-];
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      return date
+    },
+  },
+]
 watchEffect(() => {
-  value2.value = value2.value.replace(/-/g, '.');
-  console.log(value2.value);
-});
-const disabledDate = (time: Date) => {
-  return time.getTime() > Date.now();
-};
+  value2.value = value2.value.replace(/-/g, '.')
+  console.log(value2.value)
+})
+function disabledDate(time: Date) {
+  return time.getTime() > Date.now()
+}
 </script>
+
 <template>
   <div class="demo-date-picker">
     <div class="block">
@@ -63,26 +65,28 @@ const disabledDate = (time: Date) => {
     </div>
   </div>
 </template>
-<style >
+
+<style>
 .calendear {
+  width: 10rem !important;
   border: none;
   outline: none;
-  width: 10rem !important;
 }
 </style>
+
 <style scoped>
 .demo-date-picker {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   padding: 0;
-  flex-wrap: wrap;
 }
 
 .demo-date-picker .block {
+  flex: 1;
   padding: 10px 0;
   text-align: center;
   border-right: solid 1px var(--el-border-color);
-  flex: 1;
 }
 
 .demo-date-picker .block:last-child {
@@ -91,8 +95,8 @@ const disabledDate = (time: Date) => {
 
 .demo-date-picker .demonstration {
   display: block;
-  color: var(--el-text-color-secondary);
-  font-size: 14px;
   margin-bottom: 20px;
+  font-size: 14px;
+  color: var(--el-text-color-secondary);
 }
 </style>

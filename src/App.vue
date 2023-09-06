@@ -1,5 +1,4 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
 </script>
 
 <template>
@@ -14,17 +13,18 @@ import { ref, reactive, watch, computed } from 'vue';
 
 <style scoped>
 nav {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background-color: transparent;
   position: fixed;
   top: 0;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: transparent;
 }
+
 nav a {
-  margin: 0 10px 0px 0px;
+  margin: 0 10px 0 0;
   font-size: 15px;
 }
 </style>

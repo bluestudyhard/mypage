@@ -1,13 +1,3 @@
-<template>
-  <div class="container">
-    <!-- 其他组件内容 -->
-
-    <div id="stars"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
-    <h1 id="title">Hello, Vue!</h1>
-  </div>
-</template>
 <script setup>
 // import { ref, reactive, watch, computed, onMounted } from "vue";
 
@@ -61,6 +51,19 @@
 //   drawRectangle();
 // });
 </script>
+
+<template>
+  <div class="container">
+    <!-- 其他组件内容 -->
+
+    <div id="stars" />
+    <div id="stars2" />
+    <div id="stars3" />
+    <h1 id="title">
+      Hello, Vue!
+    </h1>
+  </div>
+</template>
 
 <style lang="sass" scoped>
 .container

@@ -1,7 +1,5 @@
-import { promises } from "dns";
-import { ListType } from "../src/types/listype";
-import { http } from "../src/utils/request";
-import axios, { AxiosResponse } from "axios";
+import type { ListType } from '../src/types/listype'
+import { http } from '../src/utils/request'
 
 // const showLists = async () => {
 //   const res = await axios.get("http://localhost:3000/todos");
@@ -10,23 +8,23 @@ import axios, { AxiosResponse } from "axios";
 // };
 
 export async function getLists(): Promise<ListType[]> {
-  const res = await http.get<ListType>("/todos");
-  return res.data;
+  const res = await http.get<ListType>('/todos')
+  return res.data
 }
 
 export async function addList(list: ListType): Promise<ListType[]> {
-  const res = await http.post<ListType>("/todos", list);
-  return res.data;
+  const res = await http.post<ListType>('/todos', list)
+  return res.data
 }
 export async function deleteList(id: number): Promise<ListType[]> {
-  const res = await http.delete<ListType>(`/todos/${id}`);
-  return res.data;
+  const res = await http.delete<ListType>(`/todos/${id}`)
+  return res.data
 }
 export async function updateList(list: ListType): Promise<ListType[]> {
   const res = await http.put<ListType>(`/todos/${list.id}`, {
     done: list.done,
-  });
-  return res.data;
+  })
+  return res.data
 }
 // const addList = async () => {
 //   if (inputValue.value.trim() === "") {

@@ -2,14 +2,16 @@
 defineProps({
   msg: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 </script>
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
+    <h1 class="green">
+      {{ msg }}
+    </h1>
     <h3>
       You’ve successfully created a project with
       <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
@@ -20,9 +22,9 @@ defineProps({
 
 <style scoped>
 h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
   top: -10px;
+  font-size: 2.6rem;
+  font-weight: 500;
 }
 
 h3 {

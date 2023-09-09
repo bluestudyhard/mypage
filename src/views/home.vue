@@ -29,12 +29,13 @@ const imgLists = ref([])
 
 /** 预先加载背景图片 */
 function preloadImages() {
-  importImages(3).then((res) => {
-    imgLists.value = res
-  })
-  const images = imgLists.value
-  for (let i = 0; i < images.length; i++)
-    new Image().src = images[i]
+  importImages(3)
+    .then((res) => {
+      imgLists.value = res
+      const images = imgLists.value
+      for (let i = 0; i < images.length; i++)
+        new Image().src = images[i]
+    })
 }
 
 function getImageUrl(scroll, imgLists) {

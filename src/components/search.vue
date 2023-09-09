@@ -7,12 +7,12 @@ import {
   filter,
   map,
   switchMap,
-  takeUntil,
   tap,
 } from 'rxjs/operators'
 import { searchService } from '../../services/searchService'
 
-const emits = defineEmits(['changeFoucus', 'missFocus'])
+const emits = defineEmits(['changeFocus', 'missFocus'])
+
 const searchTerm = ref('')
 const searchResults = ref([])
 const searchType = ref(HTMLInputElement)
@@ -22,7 +22,7 @@ const isfocus = ref(false)
 
 function changeFocus() {
   isfocus.value = true
-  emits('changeFoucus', isfocus.value)
+  emits('changeFocus', isfocus.value)
 }
 // 一旦点出了搜索框
 function missFocus() {
@@ -64,20 +64,6 @@ onMounted(() => {
     .subscribe()
 })
 
-function onSearchInput() {
-  searchSubject
-    .pipe(
-      debounceTime(800), // 设置节流时间
-      distinctUntilChanged(), // 直到有新的输入才会创建新的流
-      filter(term => term !== ''), // 过滤掉空字符串
-      switchMap(term => searchService.search(term)), // 切换到新的流
-      takeUntil(cancelSearch),
-    )
-    .subscribe((results) => {
-      searchResults.value = results
-    })
-  searchSubject.next(searchTerm.value)
-}
 function navigateTo(url) {
   window.open(url)
   cancleSubscribe()

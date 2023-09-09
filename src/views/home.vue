@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { generateScrollStyle, useScrolled } from '../utils/scroll'
 import myclock from '../components/myclock.vue'
 import todolist from '../components/MyToDoList.vue'
@@ -7,9 +7,10 @@ import next from '../components/PageNext.vue'
 import star from '../components/star.vue'
 import search from '../components/search.vue'
 
-const isHide = ref(false)
 const searchFocus = ref(false)
 const scrolled = ref(0)
+const isHide = computed(() => scrolled.value < 0.25)
+const pageNum = 3
 
 /**
  * scrolled表示滚动条的滚动区间，[0,0.25] (0.25,0.5] (0.5,0.75] (0.75,1] 分别有不同的效果
@@ -17,42 +18,27 @@ const scrolled = ref(0)
  */
 // 动态import 图片
 
-async function importImages(imgNum) {
-  const tempLists = []
-  for (let i = 1; i <= imgNum; i++) {
-    const imgPath = await import(`@/assets/images/page${i}.webp`)
-    tempLists.push(imgPath.default)
-  }
-  return tempLists
-}
-const imgLists = ref([])
+const imgLists = Array.from({ length: pageNum }, (_, i) => `/images/page${i + 1}.webp`)
 
 /** 预先加载背景图片 */
 function preloadImages() {
-  importImages(3)
-    .then((res) => {
-      imgLists.value = res
-      const images = imgLists.value
-      for (let i = 0; i < images.length; i++)
-        new Image().src = images[i]
-    })
+  imgLists.forEach((img) => {
+    new Image().src = img
+  })
 }
 
-function getImageUrl(scroll, imgLists) {
+function getImageUrl(scroll) {
   const scrollRanges = [
-    { range: [0, 0.25], imgIndex: 0 },
-    { range: [0.25, 0.5], imgIndex: 1 },
-    { range: [0.5, 1], imgIndex: 2 },
+    [0, 0.25],
+    [0.25, 0.5],
+    [0.5, 1],
   ]
 
-  const { imgIndex } = scrollRanges.find(({ range }) => scroll >= range[0] && scroll <= range[1])
+  const imgIndex = scrollRanges.findIndex(range => scroll >= range[0] && scroll <= range[1])
   return imgLists[imgIndex]
 }
 
-const changeBackGround = computed(() => {
-  const imageUrl = getImageUrl(scrolled.value, imgLists.value)
-  return `${imageUrl}`
-})
+const changeBackGround = computed(() => getImageUrl(scrolled.value))
 
 const scrollTextList = computed(() => [
   {
@@ -75,15 +61,6 @@ const scrollStar = computed(() => ({
   transition: 'all 0.8s ease-in-out',
 }))
 
-/** 监听区 */
-// 懒得改了
-watchEffect(() => {
-  isHide.value = !scrolled.value > 0.25
-  // console.log(imgLists.value)
-  // console.log('scrooled', scrolled.value)
-  // console.log(generateScrollStyle(scrolled, [0, 0.25], 0).value)
-})
-
 onMounted(() => {
   window.addEventListener('scroll', () => {
     scrolled.value = useScrolled().value
@@ -91,14 +68,13 @@ onMounted(() => {
 
   preloadImages()
 })
+
 // 接收子组件，监听搜索框的focus事件
 function handleFocusChange(isfocus) {
   searchFocus.value = isfocus
-  console.log(searchFocus.value)
 }
 function handleFocusblur(isfocus) {
   searchFocus.value = isfocus
-  console.log(searchFocus.value)
 }
 const onSearch = computed(() => ({
   transform: ' scale(1.1)',
@@ -111,25 +87,28 @@ const onSearch = computed(() => ({
     <div class="mask">
       <!-- <div :style="searchFocus ? onSearch : changeBackGround" draggable="false" class="bg" /> -->
       <img :src="changeBackGround" class="bg" draggable="false" :style="searchFocus ? onSearch : ''">
+
       <search
         class="page-search"
         :style="scrollSerach"
-        @changeFoucus="handleFocusChange"
-        @missFocus="handleFocusblur"
+        @change-focus="handleFocusChange"
+        @miss-focus="handleFocusblur"
       />
+
       <star class="star" :style="scrollStar" />
+
       <div v-for="text in scrollTextList" :key="text" class="pageText">
         <h1 class="page-text" :style="text.style">
           {{ text.text }}
         </h1>
       </div>
-      <myclock v-if="isHide" class="myclock" />
-      <div class="notice">
-        <next :style="scrollNotice" />
-      </div>
+
+      <next :style="scrollNotice" class="notice" />
     </div>
-    <div v-if="isHide" class="myToDoList">
-      <todolist />
+
+    <div v-show="isHide">
+      <myclock class="myclock" />
+      <todolist class="myToDoList" />
     </div>
   </div>
 </template>
@@ -224,7 +203,7 @@ const onSearch = computed(() => ({
 
 .page-search {
   position: fixed;
-  top: 10%;
+  top: 15%;
   z-index: 20;
   display: flex;
   align-items: center;

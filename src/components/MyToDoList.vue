@@ -1,25 +1,22 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
-import type { ListType } from '../types/listype'
-import { addList, deleteList, getLists, updateList } from '../../services/getTodo'
+import type { toDoListType } from '../types/listype'
+import { addList, deleteList, getLists, updateListItem } from '../../services/getTodo'
 import calendar from '../components/calendar.vue'
 import TodoItem from './TodoItem.vue'
 
-const inputValue = ref('')
-const lists = ref<ListType[]>(Array.from({ length: 5 }, (_, i) => ({
-  id: i,
-  text: `item ${i}`,
-  time: Date.now().toLocaleString(),
-  done: true,
-})))
 const showinput = ref(false)
 const compeleted = ref(true)
 const time = ref('')
+const inputValue = ref('')
 
+const lists = ref<toDoListType[]>([])
 async function showLists() {
   lists.value = await getLists()
+
   lists.value = lists.value.filter(list => list.time === time.value)
+  // console.log(lists.value)
 }
 
 // 添加list
@@ -31,7 +28,7 @@ async function addItem() {
 
   // 如果里面的月份，天数是个位数，就在前面加0
   // axios 自动转换为json
-  const item: ListType = {
+  const item: toDoListType = {
     text: inputValue.value,
     time: time.value,
     done: false,
@@ -47,9 +44,8 @@ async function addItem() {
 function showAdd() {
   showinput.value = !showinput.value
 }
-
 // 删除list
-async function removeList(index, listID) {
+async function removeList(index: number, listID: number) {
   if (confirm('确定删除改项吗？') === false)
     return
 
@@ -64,9 +60,10 @@ const todolists = computed(() => {
   return compeleted.value ? lists.value.filter(list => !list.done) : lists.value
 })
 
-async function isdone(list) {
+async function isdone(list: toDoListType) {
+  console.log(list, list.done)
   list.done = !list.done
-  const res = await updateList(list)
+  const res = await updateListItem(list)
   console.log(res)
 }
 const handleDateUpdated: any = (val: any) => {
@@ -75,25 +72,29 @@ const handleDateUpdated: any = (val: any) => {
   time.value = val
   showLists()
 }
-
-useSortable('#todo-lists', lists)
+const el = ref<HTMLElement | null>(null)
+useSortable(el, lists.value, {
+  animation: 500,
+})
 
 onMounted(() => {
   const date = new Date()
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
-  time.value = `${year}.${String(month).padStart(2, '0')}.${day}`
-
+  time.value = `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')}`
   showLists()
   console.log(time.value)
 })
+// watchEffect(() => {
+//   console.log(lists.value)
+// })
 </script>
 
 <template>
   <div class="myTodoList">
     <div class="avator">
-      <p class="list-title">
+      <p class="listTitle">
         Todo List
       </p>
     </div>
@@ -108,23 +109,21 @@ onMounted(() => {
       </button>
     </div>
 
-    <ul id="todo-lists">
-      <TodoItem
-        v-for="(list, index) in todolists"
-        :key="list.id"
-        :todo="list"
-        :index="index"
-        @isdone="isdone"
-        @removeList="removeList"
-      />
-    </ul>
+    <ul id="todoLists" ref="el">
+      <li v-for="(list, index) in todolists" :key="list.id">
+        <TodoItem :todo="list" :index="index" class="listItem" @isdone="isdone" @remove-list="removeList" />
+      </li>
 
-    <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px">
-      <button class="complete" @click="compeleted = !compeleted">
-        {{ compeleted ? 'showall' : 'HideCompleted' }}
-      </button>
-      <calendar class="calendar" @handleDateChange="handleDateUpdated" />
-    </div>
+      <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px">
+        <button class="complete" @click="compeleted = !compeleted">
+          {{ compeleted ? 'showall' : 'HideCompleted' }}
+        </button>
+        <calendar
+          class="calendar"
+          @handle-date-change="handleDateUpdated"
+        />
+      </div>
+    </ul>
   </div>
 </template>
 
@@ -136,27 +135,21 @@ onMounted(() => {
   backdrop-filter: blur(2px);
 }
 
-.list-title {
-  font-size: 20px;
-  font-weight: 550;
-  background: linear-gradient(to right, #fff, #fff0bf);
-
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .myTodoList {
-  width: 240px;
+  width: 15rem;
   max-height: 600px;
+  margin: 0 auto;
   overflow: auto;
   overflow-x: hidden;
   background: #fff0;
   border-radius: 15px;
-  box-shadow: inset 0 0 3px 0 #9b9a9a57,
-    0 2px 2px 0 #ffffff38;
+  box-shadow: inset 0 0 3px 0 #9b9a9a57, 0 2px 2px 0 #ffffff38;
   scrollbar-width: none;
+}
+
+.myTodoList:hover {
+  backdrop-filter: blur(3px);
+
 }
 
 .listHeader {
@@ -172,7 +165,7 @@ onMounted(() => {
   width: 7.9rem;
   min-height: 15px;
   padding: 1px 1px 1px 3px;
-  font-family: "pingfang SC", "PingFang SC", "Microsoft YaHei", "Helvetica Neue";
+  font-family: 'pingfang SC', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue';
   font-size: 12px;
   font-weight: 500;
   color: rgb(86, 85, 85);
@@ -184,6 +177,14 @@ onMounted(() => {
   /** 只给底部边框加阴影 */
   box-shadow: 0 2px 0 #999;
   transition: all 0.5s ease;
+}
+
+.listTitle {
+  font-size: 20px;
+  font-weight: 550;
+  background: linear-gradient(to right, #fff, #fff0bf);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /** addText 动画效果 */
@@ -204,20 +205,6 @@ onMounted(() => {
   opacity: 0;
   transform: translateY(20px);
 }
-
-/* .addText-leave-active,
-.addText-leave-from {
-  transition: all 0.8s ease;
-  transform: translateY(-20px);
-  opacity: 0;
-} */
-
-/* .listHeader input:focus {
-  width: 150px;
-  outline: none;
-  border: 0;
-  box-shadow: 0px 0px 3px 0px rgba(227, 227, 227, 0.5);
-} */
 
 .addlist {
   position: relative;

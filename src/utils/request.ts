@@ -1,23 +1,23 @@
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 const service: AxiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
 })
 export const http = {
-  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return service.get(url, config)
   },
 
-  post<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {
+  post<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return service.post(url, data, config)
   },
 
-  put<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {
+  put<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return service.put(url, data, config)
   },
 
-  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     return service.delete(url, config)
   },
 }

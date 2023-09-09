@@ -1,11 +1,12 @@
-export interface ListType {
+export interface toDoListType {
   id?: number
   done: boolean
   text?: string
   time: string
-  [proName: string]: any
+
+  // [proName: string]: an
 }
-export interface ItemType {
+export interface toDoListItemType {
   id?: number
   done: boolean
   text?: string

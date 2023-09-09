@@ -35,14 +35,14 @@
 
 $shadows-small: multiple-box-shadow(700);
 $shadows-medium: multiple-box-shadow(200);
-$shadows-big: multiple-box-shadow(100);
+$shadows-big: multiple-box-shadow(80);
 
 #stars {
   width: 1px;
   height: 1px;
   background: transparent;
   box-shadow: $shadows-small;
-  animation: anim-star 50s linear infinite;
+  animation: anime-star 50s linear infinite;
 
   &::after {
     position: absolute;
@@ -60,35 +60,17 @@ $shadows-big: multiple-box-shadow(100);
   height: 2px;
   background: transparent;
   box-shadow: $shadows-medium;
-  animation: animStar 100s linear infinite;
+  animation: anime-star 100s linear infinite;
 
-  &::after {
-    position: absolute;
-    top: 2000px;
-    width: 2px;
-    height: 2px;
-    content: ' ';
-    background: transparent;
-    box-shadow: $shadows-medium;
-  }
 }
 
 #stars3 {
-  width: 3px;
-  height: 3px;
+  width: 2.5px;
+  height: 2.5px;
   background: transparent;
   box-shadow: $shadows-big;
-  animation: animStar 150s linear infinite;
+  animation: anime-star 150s linear infinite;
 
-  &::after {
-    position: absolute;
-    top: 2000px;
-    width: 3px;
-    height: 3px;
-    content: ' ';
-    background: transparent;
-    box-shadow: $shadows-big;
-  }
 }
 
 #title {
@@ -112,7 +94,7 @@ $shadows-big: multiple-box-shadow(100);
   }
 }
 
-@keyframes anim-star {
+@keyframes anime-star {
   from {
     transform: translateY(0);
   }

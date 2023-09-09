@@ -1,4 +1,4 @@
-import type { ListType } from '../src/types/listype'
+import type { toDoListType } from '../src/types/listype'
 import { http } from '../src/utils/request'
 
 // const showLists = async () => {
@@ -7,21 +7,21 @@ import { http } from '../src/utils/request'
 //
 // };
 
-export async function getLists(): Promise<ListType[]> {
-  const res = await http.get<ListType>('/todos')
-  return res.data
+export async function getLists(): Promise<toDoListType[]> {
+  const res = await http.get<toDoListType[]>('/todos')
+  return res.data as toDoListType[]
 }
 
-export async function addList(list: ListType): Promise<ListType[]> {
-  const res = await http.post<ListType>('/todos', list)
+export async function addList(list: toDoListType): Promise<toDoListType[]> {
+  const res = await http.post<toDoListType[]>('/todos', list)
   return res.data
 }
-export async function deleteList(id: number): Promise<ListType[]> {
-  const res = await http.delete<ListType>(`/todos/${id}`)
+export async function deleteList(id: number): Promise<toDoListType[]> {
+  const res = await http.delete<toDoListType[]>(`/todos/${id}`)
   return res.data
 }
-export async function updateList(list: ListType): Promise<ListType[]> {
-  const res = await http.put<ListType>(`/todos/${list.id}`, {
+export async function updateListItem(list: toDoListType): Promise<toDoListType[]> {
+  const res = await http.put<toDoListType[]>(`/todos/${list.id}`, {
     done: list.done,
   })
   return res.data

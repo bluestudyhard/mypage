@@ -32,8 +32,7 @@ const minutes = ref(0)
 function setAM() {
   if (current.value.getHours() < 12)
     isAM.value = true
-  else
-    isAM.value = false
+  else isAM.value = false
 }
 const rotateHour = ref(0)
 const rotateMinute = ref(0)
